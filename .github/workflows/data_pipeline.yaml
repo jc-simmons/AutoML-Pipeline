@@ -1,0 +1,128 @@
+name: Data Processing Pipeline
+on:
+  workflow_dispatch: 
+  #schedule:
+  #- cron: "0 0 * * *"
+  
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    outputs: 
+      update_status: ${{  steps.clean.outputs.status  }}    
+    steps:
+
+      - name: Access the repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
+
+          
+      - name: Configure Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.9'
+    
+      - name: Install necessary libraries
+        run: |
+            pip install -r requirements/requirements-source.txt
+
+      - name: Execute Script
+        env:
+          URI: ${{ secrets.GITHUB_TOKEN }}
+        run: python -m src.source.data_sourcing
+        id: clean
+        
+      - name: Commit and push if changed
+        run: |-
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "Data Updated: ${timestamp}" || exit 0
+          git push
+
+      - name: wait
+        run: sleep 30s
+                  
+        
+          
+  clean-data: 
+   needs: update-data
+   if: needs.update-data.outputs.update_status == 'updated'
+   runs-on: ubuntu-latest
+   steps:
+   
+      - name: Access the repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Configure Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.9'
+          
+      - name: Install necessary libraries
+        run: |
+            pip install -r requirements/requirements-clean.txt      
+
+      - name: Execute Script
+        env:
+          URI: ${{ secrets.GITHUB_TOKEN }}
+        run: python -m src.clean.data_cleaning
+
+      - name: wait
+        run: sleep 30s
+     
+      - name: Commit and push
+        run: |-
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git pull origin main
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "Data Cleaned: ${timestamp}" || exit 0
+          git push 
+
+      - name: wait
+        run: sleep 30s
+          
+     
+  model-data: 
+   needs: [update-data, clean-data]
+   if: needs.update-data.outputs.update_status == 'updated'
+   runs-on: ubuntu-latest
+   steps:
+   
+      - name: Access the repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{secrets.PAT_WORKFLOW_TOKEN}}
+          fetch-depth: 0
+          ref: main
+          
+      - name: Configure Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.9'
+          
+      - name: Install necessary libraries
+        run: |
+            pip install -r requirements/requirements-model.txt     
+
+      - name: Execute Script
+        env:
+          URI: ${{ secrets.GITHUB_TOKEN }}
+        run: python -m src.model.experiment_runner
+     
+      - name: Commit and push
+        run: |-
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git pull origin main
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "Model Updated: ${timestamp}" || exit 0
+          git push   

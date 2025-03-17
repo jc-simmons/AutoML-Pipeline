@@ -1,0 +1,58 @@
+models:
+  sklearn.ensemble.GradientBoostingRegressor:
+      max_depth:
+        - 5
+        - 10
+      n_estimators:
+        - 150
+      loss:
+        - absolute_error
+  sklearn.ensemble.RandomForestRegressor:
+      max_depth:
+        - 5
+        
+random_seed: 42
+refit: True
+
+test_split:
+  sklearn.model_selection.ShuffleSplit:
+    n_splits: 1
+    test_size: 0.1
+
+validation_split:
+  sklearn.model_selection.ShuffleSplit:
+    n_splits: 1
+    test_size: 0.1
+
+features:
+  numeric:
+    - AGE_12_NUM
+    - TENURE
+    - AHRSMAIN
+    - UNPAIDOT
+  categorical:
+    - FTPTMAIN
+    - EDUC
+    - GENDER
+    - NAICS_21
+    - NOC_43
+    - PROV
+    - CMA
+target: 
+  - HRLYEARN
+
+paths:
+  data: ./data
+  output: ./output
+files:
+  version: date_version.json
+  raw_data: raw_data.csv
+  cleaned_data: cleaned_data.csv
+  codebook: Documents/LFS_PUMF_EPA_FGMD_codebook.csv
+
+source_url: https://www150.statcan.gc.ca/n1/pub/71m0001x/2021001/
+max_lookback_months: 3
+decode_column_map:
+  field_num: 0
+  variable: 3
+  label: 4

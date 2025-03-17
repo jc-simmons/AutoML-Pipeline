@@ -1,0 +1,26 @@
+{
+    "VAL": [
+        {
+            "model": "GradientBoostingRegressor",
+            "params": {
+                "max_depth": 5,
+                "n_estimators": 100,
+                "loss": "absolute_error"
+            },
+            "R2": 0.46543633638236837,
+            "ACC": 0.5493292946776287
+        }
+    ],
+    "TEST": [
+        {
+            "model": "GradientBoostingRegressor",
+            "params": {
+                "max_depth": 5,
+                "n_estimators": 100,
+                "loss": "absolute_error"
+            },
+            "R2": 0.44840387384288616,
+            "ACC": 0.5552093476144109
+        }
+    ]
+}
