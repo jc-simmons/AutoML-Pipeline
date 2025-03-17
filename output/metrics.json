@@ -4,23 +4,41 @@
             "model": "GradientBoostingRegressor",
             "params": {
                 "max_depth": 5,
-                "n_estimators": 100,
+                "n_estimators": 150,
                 "loss": "absolute_error"
             },
-            "R2": 0.46543633638236837,
-            "ACC": 0.5493292946776287
+            "R2": 0.4934519829444147,
+            "ACC": 0.5688013846819558
+        },
+        {
+            "model": "GradientBoostingRegressor",
+            "params": {
+                "max_depth": 10,
+                "n_estimators": 150,
+                "loss": "absolute_error"
+            },
+            "R2": 0.5264831175475413,
+            "ACC": 0.5917351795759411
+        },
+        {
+            "model": "RandomForestRegressor",
+            "params": {
+                "max_depth": 5
+            },
+            "R2": 0.30224776873247206,
+            "ACC": 0.3965815664214626
         }
     ],
     "TEST": [
         {
             "model": "GradientBoostingRegressor",
             "params": {
-                "max_depth": 5,
-                "n_estimators": 100,
+                "max_depth": 10,
+                "n_estimators": 150,
                 "loss": "absolute_error"
             },
-            "R2": 0.44840387384288616,
-            "ACC": 0.5552093476144109
+            "R2": 0.5154411126218428,
+            "ACC": 0.6003894839337878
         }
     ]
 }
