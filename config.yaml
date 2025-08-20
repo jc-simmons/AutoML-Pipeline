@@ -2,7 +2,6 @@ models:
   sklearn.ensemble.GradientBoostingRegressor:
       max_depth:
         - 5
-        - 10
       n_estimators:
         - 150
       loss:
@@ -56,3 +55,4 @@ decode_column_map:
   field_num: 0
   variable: 3
   label: 4
+
