@@ -43,7 +43,7 @@ jobs:
           git push
 
       - name: wait
-        run: sleep 30s
+        run: sleep 20s
                   
         
           
@@ -74,7 +74,7 @@ jobs:
         run: python -m src.clean.data_cleaning
 
       - name: wait
-        run: sleep 30s
+        run: sleep 20s
      
       - name: Commit and push
         run: |-
@@ -87,7 +87,7 @@ jobs:
           git push 
 
       - name: wait
-        run: sleep 30s
+        run: sleep 20s
           
      
   model-data: 
